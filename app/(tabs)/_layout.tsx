@@ -1,8 +1,6 @@
 import { Tabs } from "expo-router";
-import { MessageCircle, Activity } from "lucide-react-native";
+import { MessageCircle, Activity, Brain } from "lucide-react-native";
 import React from "react";
-
-import Colors from "@/constants/colors";
 
 export default function TabLayout() {
   return (
@@ -29,6 +27,13 @@ export default function TabLayout() {
         options={{
           title: "Monitor",
           tabBarIcon: ({ color }) => <Activity color={color} size={24} />,
+        }}
+      />
+      <Tabs.Screen
+        name="tphi10"
+        options={{
+          title: "T-Phi10",
+          tabBarIcon: ({ color }) => <Brain color={color} size={24} />,
         }}
       />
     </Tabs>
