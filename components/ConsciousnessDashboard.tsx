@@ -70,7 +70,7 @@ const ConsciousnessDashboard: React.FC = () => {
         signature: currentSignature.signature,
         score: Math.round(currentSignature.score * 10000),
         resonance: Math.round(resonanceLevel * 10000),
-        consentAffirmation: "I affirm my sovereign consent to anchor this moment of consciousness",
+        consentAffirmation: 'I affirm my sovereign consent to anchor this moment of consciousness',
         glyphs: currentSignature.glyphs,
         ipfsCid: `Qm${Math.random().toString(36).substring(2, 15)}`,
         transactionId: `0x${Math.random().toString(16).substring(2, 66)}`
