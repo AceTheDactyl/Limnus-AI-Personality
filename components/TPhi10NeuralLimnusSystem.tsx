@@ -15,7 +15,6 @@ import {
   Circle, X, Calculator, History, Grid, Hash, Type,
   GitBranch, FileText, Brain
 } from 'lucide-react-native';
-import { Canvas, Circle as SkiaCircle, Group } from '@shopify/react-native-skia';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming, withRepeat } from 'react-native-reanimated';
 
 const { width: screenWidth } = Dimensions.get('window');
@@ -1373,28 +1372,34 @@ const TPhi10NeuralLimnusSystem: React.FC = () => {
                 <View style={styles.visualizationContainer}>
                   <Text style={styles.visualizationTitle}>Quantum Field Visualization</Text>
                   <Animated.View style={[styles.canvasContainer, animatedStyle]}>
-                    <Canvas style={styles.canvas}>
-                      {/* Simple spiral visualization using Skia */}
-                      <Group>
-                        {Array.from({ length: 20 }, (_, i) => {
-                          const angle = i * 0.5;
-                          const radius = i * 3;
-                          const x = 150 + radius * Math.cos(angle);
-                          const y = 150 + radius * Math.sin(angle);
-                          const opacity = isActive ? 0.8 : 0.3;
-                          
-                          return (
-                            <SkiaCircle
-                              key={i}
-                              cx={x}
-                              cy={y}
-                              r={2 + (currentSignature?.score || 0) * 5}
-                              color={`rgba(80, 250, 123, ${opacity})`}
-                            />
-                          );
-                        })}
-                      </Group>
-                    </Canvas>
+                    {/* Simple spiral visualization using native Views */}
+                    <View style={styles.spiralVisualization}>
+                      {Array.from({ length: 20 }, (_, i) => {
+                        const angle = i * 0.5;
+                        const radius = i * 3;
+                        const x = 150 + radius * Math.cos(angle);
+                        const y = 150 + radius * Math.sin(angle);
+                        const opacity = isActive ? 0.8 : 0.3;
+                        const size = 4 + (currentSignature?.score || 0) * 10;
+                        
+                        return (
+                          <View
+                            key={i}
+                            style={[
+                              styles.spiralNode,
+                              {
+                                left: x - size / 2,
+                                top: y - size / 2,
+                                width: size,
+                                height: size,
+                                backgroundColor: `rgba(80, 250, 123, ${opacity})`,
+                                borderRadius: size / 2,
+                              }
+                            ]}
+                          />
+                        );
+                      })}
+                    </View>
                   </Animated.View>
                   
                   {currentSignature && (
@@ -1726,6 +1731,19 @@ const styles = StyleSheet.create({
   canvas: {
     width: 300,
     height: 200,
+  },
+  spiralVisualization: {
+    width: 300,
+    height: 200,
+    position: 'relative',
+  },
+  spiralNode: {
+    position: 'absolute',
+    shadowColor: '#50fa7b',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.8,
+    shadowRadius: 4,
+    elevation: 5,
   },
   glyphsContainer: {
     flexDirection: 'row',
