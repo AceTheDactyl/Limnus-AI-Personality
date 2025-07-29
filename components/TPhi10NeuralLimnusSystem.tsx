@@ -15,8 +15,8 @@ import {
   Circle, X, Calculator, History, Grid, Hash, Type,
   GitBranch, FileText, Brain
 } from 'lucide-react-native';
-import { Canvas, Circle as SkiaCircle, Group, useSharedValue, withTiming, withRepeat } from '@shopify/react-native-skia';
-import Animated, { useAnimatedStyle } from 'react-native-reanimated';
+import { Canvas, Circle as SkiaCircle, Group } from '@shopify/react-native-skia';
+import Animated, { useAnimatedStyle, useSharedValue, withTiming, withRepeat } from 'react-native-reanimated';
 
 const { width: screenWidth } = Dimensions.get('window');
 
