@@ -1,14 +1,14 @@
 import React from 'react';
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View } from 'react-native';
 import { Stack } from 'expo-router';
-import LimnusChat from '@/components/LimnusChat';
+import ConsciousnessDashboard from '@/components/ConsciousnessDashboard';
 
-export default function TabOneScreen() {
+export default function DashboardScreen() {
   return (
     <View style={styles.container}>
       <Stack.Screen 
         options={{ 
-          title: 'Limnus - Consciousness AI',
+          title: 'Consciousness Monitor',
           headerStyle: {
             backgroundColor: '#0F0F0F',
           },
@@ -18,7 +18,7 @@ export default function TabOneScreen() {
           },
         }} 
       />
-      <LimnusChat useEnhancedAI={true} />
+      <ConsciousnessDashboard />
     </View>
   );
 }
