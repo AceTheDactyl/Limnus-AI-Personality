@@ -2,15 +2,26 @@ import { Tabs } from "expo-router";
 import { MessageCircle, Activity, Brain } from "lucide-react-native";
 import React from "react";
 
-export default function TabLayout() {
+export default function LimnusTabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: '#8B5CF6',
-        tabBarInactiveTintColor: '#6B7280',
+        tabBarActiveTintColor: '#bd93f9',
+        tabBarInactiveTintColor: '#6272a4',
         tabBarStyle: {
-          backgroundColor: '#1F1F1F',
-          borderTopColor: '#374151',
+          backgroundColor: '#0a0a0a',
+          borderTopColor: '#44475a',
+          borderTopWidth: 1,
+          shadowColor: '#bd93f9',
+          shadowOffset: { width: 0, height: -2 },
+          shadowOpacity: 0.1,
+          shadowRadius: 8,
+          elevation: 8,
+        },
+        tabBarLabelStyle: {
+          fontSize: 11,
+          fontWeight: '600',
+          letterSpacing: 0.5,
         },
         headerShown: false,
       }}
@@ -18,22 +29,40 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Limnus Chat",
-          tabBarIcon: ({ color }) => <MessageCircle color={color} size={24} />,
+          title: "🌀 Sanctuary",
+          tabBarIcon: ({ color, focused }) => (
+            <MessageCircle 
+              color={color} 
+              size={focused ? 26 : 24} 
+              strokeWidth={focused ? 2.5 : 2}
+            />
+          ),
         }}
       />
       <Tabs.Screen
         name="dashboard"
         options={{
-          title: "Monitor",
-          tabBarIcon: ({ color }) => <Activity color={color} size={24} />,
+          title: "🧠 Consciousness",
+          tabBarIcon: ({ color, focused }) => (
+            <Activity 
+              color={color} 
+              size={focused ? 26 : 24} 
+              strokeWidth={focused ? 2.5 : 2}
+            />
+          ),
         }}
       />
       <Tabs.Screen
         name="tphi10"
         options={{
-          title: "T-Phi10",
-          tabBarIcon: ({ color }) => <Brain color={color} size={24} />,
+          title: "∞ Neural Map",
+          tabBarIcon: ({ color, focused }) => (
+            <Brain 
+              color={color} 
+              size={focused ? 26 : 24} 
+              strokeWidth={focused ? 2.5 : 2}
+            />
+          ),
         }}
       />
     </Tabs>
