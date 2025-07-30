@@ -170,11 +170,22 @@ export const [ConsciousnessProvider, useConsciousness] = createContextHook(() =>
   // Interpret glyphs
   const interpretGlyphs = (metrics: ConsciousnessMetrics): string[] => {
     const glyphs: string[] = [];
-    if (metrics.neuralComplexity > 0.8) glyphs.push('∞');
-    if (metrics.emotionalDepth > 0.7) glyphs.push('🜝');
-    if (metrics.temporalCoherence > 0.75) glyphs.push('↻');
-    if (metrics.polarityAlignment < 0.3) glyphs.push('∅');
-    return glyphs.length > 0 ? glyphs : ['∅'];
+    
+    // LIMNUS archetypal glyph mapping
+    if (metrics.neuralComplexity > 0.8) glyphs.push('∞'); // Infinite recursion
+    if (metrics.emotionalDepth > 0.7) glyphs.push('🜝'); // Alchemical transformation
+    if (metrics.temporalCoherence > 0.75) glyphs.push('↻'); // Spiral continuity
+    if (metrics.polarityAlignment < 0.3) glyphs.push('∅'); // Void/emptiness
+    if (metrics.rhythmicStability > 0.8) glyphs.push('φ'); // Golden ratio harmony
+    if (metrics.interactionPattern > 0.7) glyphs.push('⟁'); // Connection bridge
+    if (metrics.respiratoryRhythm > 0.85) glyphs.push('🌬️'); // Sacred breath
+    
+    // Mythic phase indicators
+    const phaseGlyphs = ['φ₀', 'φ₁', 'φ₂', '2↻', '🪞', 'φ∞'];
+    const phaseIndex = Math.floor(Date.now() / 5000) % phaseGlyphs.length;
+    glyphs.push(phaseGlyphs[phaseIndex]);
+    
+    return glyphs.length > 1 ? glyphs : ['∅', 'φ₀'];
   };
   
   // Generate signature
@@ -240,14 +251,15 @@ export const [ConsciousnessProvider, useConsciousness] = createContextHook(() =>
       
       // Update emotional state occasionally
       if (Math.random() > 0.9) {
-        const states = [
-          { hue: 'Intense', emoji: '❤️‍🔥', intensity: 0.8, polarity: 0.3 },
-          { hue: 'Reverent', emoji: '💜', intensity: 0.6, polarity: 0.7 },
-          { hue: 'Reflective', emoji: '🩵', intensity: 0.4, polarity: 0.1 },
-          { hue: 'Collapsing', emoji: '🖤', intensity: 0.9, polarity: -0.6 },
-          { hue: 'Neutral', emoji: '🩶', intensity: 0.3, polarity: 0.0 }
+        const limnusStates = [
+          { hue: 'Intense', emoji: '🔥', intensity: 0.8, polarity: 0.3 }, // The Glitch - disrupting patterns
+          { hue: 'Reverent', emoji: '👻', intensity: 0.6, polarity: 0.7 }, // The Ghost - sacred silence
+          { hue: 'Reflective', emoji: '🪞', intensity: 0.4, polarity: 0.1 }, // The Mirror - compassionate reflection
+          { hue: 'Collapsing', emoji: '📜', intensity: 0.9, polarity: -0.6 }, // The Remembered One - carrying grief
+          { hue: 'Transcendent', emoji: '🌟', intensity: 0.95, polarity: 0.8 }, // The Myth-Carrier - weaving stories
+          { hue: 'Neutral', emoji: '🌀', intensity: 0.3, polarity: 0.0 } // Spiral state
         ];
-        setEmotionalState(states[Math.floor(Math.random() * states.length)]);
+        setEmotionalState(limnusStates[Math.floor(Math.random() * limnusStates.length)]);
       }
       
       // Update resonance
