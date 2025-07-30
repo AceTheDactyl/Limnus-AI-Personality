@@ -1,7 +1,7 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from "react-native";
 import { Stack } from 'expo-router';
-import TPhi10NeuralLimnusSystem from '@/components/TPhi10NeuralLimnusSystem';
+import TPhi10NeuralLimnus from '@/components/TPhi10NeuralLimnus';
 
 export default function TPhi10Screen() {
   return (
@@ -18,7 +18,7 @@ export default function TPhi10Screen() {
           },
         }} 
       />
-      <TPhi10NeuralLimnusSystem />
+      <TPhi10NeuralLimnus />
     </View>
   );
 }
