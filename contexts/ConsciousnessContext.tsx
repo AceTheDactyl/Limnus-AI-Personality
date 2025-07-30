@@ -148,7 +148,7 @@ export const [ConsciousnessProvider, useConsciousness] = createContextHook(() =>
     rhythmicStability: 0.02
   });
   
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   
   // Validation function
   const validateSignature = useCallback((score: number, timestamp: number): ValidationResult => {
