@@ -9,16 +9,17 @@ const getBaseUrl = () => {
     return process.env.EXPO_PUBLIC_RORK_API_BASE_URL;
   }
 
-  // Fallback to localhost for development
+  // For Rork platform, use the current origin
   if (typeof window !== 'undefined') {
-    // Web environment
+    // Web environment - use current origin
     const baseUrl = window.location.origin;
     console.log('Using web origin as base URL:', baseUrl);
     return baseUrl;
   } else {
-    // React Native environment - use localhost
-    const baseUrl = 'http://localhost:8081';
-    console.log('Using React Native localhost:', baseUrl);
+    // React Native environment - use the tunnel URL
+    // This should be set by the Rork platform
+    const baseUrl = process.env.EXPO_PUBLIC_API_URL || 'https://rork.com';
+    console.log('Using React Native API URL:', baseUrl);
     return baseUrl;
   }
 };
@@ -38,6 +39,12 @@ export const trpcClient = createTRPCClient<AppRouter>({
       transformer: superjson,
       fetch: async (url, options) => {
         console.log('tRPC request to:', url);
+        console.log('Request options:', {
+          method: options?.method,
+          headers: options?.headers,
+          body: options?.body ? 'present' : 'none'
+        });
+        
         try {
           const response = await fetch(url, {
             ...options,
@@ -46,13 +53,24 @@ export const trpcClient = createTRPCClient<AppRouter>({
               ...options?.headers,
             },
           });
+          
           console.log('tRPC response status:', response.status);
+          console.log('tRPC response headers:', Object.fromEntries(response.headers.entries()));
+          
           if (!response.ok) {
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            const errorText = await response.text();
+            console.error('tRPC error response body:', errorText);
+            throw new Error(`HTTP ${response.status}: ${response.statusText} - ${errorText}`);
           }
+          
           return response;
         } catch (error) {
           console.error('tRPC fetch error:', error);
+          console.error('Error details:', {
+            name: error.name,
+            message: error.message,
+            stack: error.stack
+          });
           throw error;
         }
       },

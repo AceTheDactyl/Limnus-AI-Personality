@@ -22,8 +22,18 @@ app.use(
   })
 );
 
+// Debug endpoint to test tRPC mounting
+app.get("/trpc", (c) => {
+  console.log('tRPC base endpoint hit');
+  return c.json({ 
+    message: "tRPC server is mounted",
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Simple health check endpoint
 app.get("/", (c) => {
+  console.log('Health check endpoint hit');
   return c.json({ 
     status: "ok", 
     message: "API is running",

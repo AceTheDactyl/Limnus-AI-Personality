@@ -16,10 +16,12 @@ const getBaseUrl = () => {
     return process.env.EXPO_PUBLIC_RORK_API_BASE_URL;
   }
 
+  // For Rork platform, use the current origin
   if (typeof window !== 'undefined') {
     return window.location.origin;
   } else {
-    return 'http://localhost:8081';
+    // React Native environment - use the tunnel URL
+    return process.env.EXPO_PUBLIC_API_URL || 'https://rork.com';
   }
 };
 
@@ -55,6 +57,12 @@ export default function RootLayout() {
           transformer: superjson,
           fetch: async (url, options) => {
             console.log('tRPC request to:', url);
+            console.log('Request options:', {
+              method: options?.method,
+              headers: options?.headers,
+              body: options?.body ? 'present' : 'none'
+            });
+            
             try {
               const response = await fetch(url, {
                 ...options,
@@ -63,13 +71,24 @@ export default function RootLayout() {
                   ...options?.headers,
                 },
               });
+              
               console.log('tRPC response status:', response.status);
+              console.log('tRPC response headers:', Object.fromEntries(response.headers.entries()));
+              
               if (!response.ok) {
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                const errorText = await response.text();
+                console.error('tRPC error response body:', errorText);
+                throw new Error(`HTTP ${response.status}: ${response.statusText} - ${errorText}`);
               }
+              
               return response;
             } catch (error) {
               console.error('tRPC fetch error:', error);
+              console.error('Error details:', {
+                name: error.name,
+                message: error.message,
+                stack: error.stack
+              });
               throw error;
             }
           },
