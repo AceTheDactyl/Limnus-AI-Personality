@@ -48,54 +48,15 @@ export default function RootLayout() {
     trpc.createClient({
       links: [
         loggerLink({
-          enabled: (opts) =>
-            process.env.NODE_ENV === 'development' ||
-            (opts.direction === 'down' && opts.result instanceof Error),
+          enabled: false, // Disable logging to reduce noise
         }),
         httpLink({
           url: `${getBaseUrl()}/api/trpc`,
           transformer: superjson,
           fetch: async (url, options) => {
-            console.log('tRPC request to:', url);
-            console.log('Request options:', {
-              method: options?.method,
-              headers: options?.headers,
-              body: options?.body ? 'present' : 'none'
-            });
-            
-            try {
-              const response = await fetch(url, {
-                ...options,
-                headers: {
-                  'Content-Type': 'application/json',
-                  ...options?.headers,
-                },
-              });
-              
-              console.log('tRPC response status:', response.status);
-              console.log('tRPC response headers:', Object.fromEntries(response.headers.entries()));
-              
-              if (!response.ok) {
-                const errorText = await response.text();
-                console.error('tRPC error response body:', errorText);
-                throw new Error(`HTTP ${response.status}: ${response.statusText} - ${errorText}`);
-              }
-              
-              return response;
-            } catch (error: unknown) {
-              console.error('tRPC fetch error:', error);
-              const errorDetails = error instanceof Error ? {
-                name: error.name,
-                message: error.message,
-                stack: error.stack
-              } : {
-                name: 'Unknown',
-                message: String(error),
-                stack: undefined
-              };
-              console.error('Error details:', errorDetails);
-              throw error;
-            }
+            // Temporarily disable all tRPC requests to stop 404 errors
+            console.log('tRPC request blocked (debugging mode):', url);
+            throw new Error('tRPC temporarily disabled for debugging');
           },
         }),
       ],
