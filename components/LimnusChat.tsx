@@ -98,6 +98,7 @@ const LimnusChat: React.FC<LimnusChatProps> = ({
   // Test backend connection on mount
   useEffect(() => {
     console.log('Testing backend connection...');
+    console.log('Base URL being used:', typeof window !== 'undefined' ? window.location.origin : 'http://localhost:8081');
     testQuery.refetch();
   }, [testQuery]);
   

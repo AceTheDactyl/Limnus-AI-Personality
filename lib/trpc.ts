@@ -26,16 +26,7 @@ const getBaseUrl = () => {
 export const trpc = createTRPCReact<AppRouter>();
 
 // Create a vanilla tRPC client for non-React usage
-export const vanillaTrpcClient = createTRPCClient<AppRouter>({
-  links: [
-    httpLink({
-      url: `${getBaseUrl()}/api/trpc`,
-      transformer: superjson,
-    }),
-  ],
-});
-
-export const trpcClient = trpc.createClient({
+export const trpcClient = createTRPCClient<AppRouter>({
   links: [
     loggerLink({
       enabled: (opts) =>
@@ -56,6 +47,9 @@ export const trpcClient = trpc.createClient({
             },
           });
           console.log('tRPC response status:', response.status);
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+          }
           return response;
         } catch (error) {
           console.error('tRPC fetch error:', error);
