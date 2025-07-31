@@ -82,13 +82,18 @@ export default function RootLayout() {
               }
               
               return response;
-            } catch (error) {
+            } catch (error: unknown) {
               console.error('tRPC fetch error:', error);
-              console.error('Error details:', {
+              const errorDetails = error instanceof Error ? {
                 name: error.name,
                 message: error.message,
                 stack: error.stack
-              });
+              } : {
+                name: 'Unknown',
+                message: String(error),
+                stack: undefined
+              };
+              console.error('Error details:', errorDetails);
               throw error;
             }
           },
