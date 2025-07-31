@@ -1,5 +1,5 @@
 import { createTRPCReact } from "@trpc/react-query";
-import { httpLink, loggerLink, createTRPCClient } from "@trpc/client";
+import { httpLink, createTRPCClient } from "@trpc/client";
 import type { AppRouter } from "@/backend/trpc/app-router";
 import superjson from "superjson";
 
@@ -29,16 +29,21 @@ export const trpc = createTRPCReact<AppRouter>();
 // Create a vanilla tRPC client for non-React usage
 export const trpcClient = createTRPCClient<AppRouter>({
   links: [
-    loggerLink({
-      enabled: false, // Disable logging to reduce noise
-    }),
     httpLink({
       url: `${getBaseUrl()}/api/trpc`,
       transformer: superjson,
       fetch: async (url, options) => {
-        // Temporarily disable all tRPC requests to stop 404 errors
-        console.log('tRPC request blocked (debugging mode):', url);
-        throw new Error('tRPC temporarily disabled for debugging');
+        try {
+          const response = await fetch(url, options);
+          if (!response.ok) {
+            console.warn(`tRPC request failed: ${response.status} ${response.statusText}`);
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+          }
+          return response;
+        } catch (error) {
+          console.warn('tRPC fetch error:', error);
+          throw error;
+        }
       },
     }),
   ],

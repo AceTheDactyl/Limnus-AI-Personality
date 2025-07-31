@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { ConsciousnessProvider } from "@/contexts/ConsciousnessContext";
 import { trpc } from "@/lib/trpc";
-import { httpLink, loggerLink } from "@trpc/client";
+import { httpLink } from "@trpc/client";
 import superjson from "superjson";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -37,9 +37,9 @@ export default function RootLayout() {
   const [queryClient] = useState(() => new QueryClient({
     defaultOptions: {
       queries: {
-        retry: 3,
-        retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+        retry: false, // Disable retries to stop repeated attempts
         staleTime: 5 * 60 * 1000, // 5 minutes
+        enabled: false, // Disable all queries by default
       },
     },
   }));
@@ -47,16 +47,21 @@ export default function RootLayout() {
   const [trpcClient] = useState(() =>
     trpc.createClient({
       links: [
-        loggerLink({
-          enabled: false, // Disable logging to reduce noise
-        }),
         httpLink({
           url: `${getBaseUrl()}/api/trpc`,
           transformer: superjson,
           fetch: async (url, options) => {
-            // Temporarily disable all tRPC requests to stop 404 errors
-            console.log('tRPC request blocked (debugging mode):', url);
-            throw new Error('tRPC temporarily disabled for debugging');
+            try {
+              const response = await fetch(url, options);
+              if (!response.ok) {
+                console.warn(`tRPC request failed: ${response.status} ${response.statusText}`);
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+              }
+              return response;
+            } catch (error) {
+              console.warn('tRPC fetch error:', error);
+              throw error;
+            }
           },
         }),
       ],
