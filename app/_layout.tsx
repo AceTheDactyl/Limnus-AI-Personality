@@ -4,6 +4,9 @@ import * as SplashScreen from "expo-splash-screen";
 import React, { useEffect, useState } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { ConsciousnessProvider } from "@/contexts/ConsciousnessContext";
+import { trpc } from "@/lib/trpc";
+import { httpLink, loggerLink } from "@trpc/client";
+import superjson from "superjson";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -41,17 +44,77 @@ export default function RootLayout() {
     },
   }));
 
+  const [trpcClient] = useState(() =>
+    trpc.createClient({
+      links: [
+        loggerLink({
+          enabled: (opts) =>
+            process.env.NODE_ENV === 'development' ||
+            (opts.direction === 'down' && opts.result instanceof Error),
+        }),
+        httpLink({
+          url: `${getBaseUrl()}/api/trpc`,
+          transformer: superjson,
+          fetch: async (url, options) => {
+            console.log('tRPC request to:', url);
+            console.log('Request options:', {
+              method: options?.method,
+              headers: options?.headers,
+              body: options?.body ? 'present' : 'none'
+            });
+            
+            try {
+              const response = await fetch(url, {
+                ...options,
+                headers: {
+                  'Content-Type': 'application/json',
+                  ...options?.headers,
+                },
+              });
+              
+              console.log('tRPC response status:', response.status);
+              console.log('tRPC response headers:', Object.fromEntries(response.headers.entries()));
+              
+              if (!response.ok) {
+                const errorText = await response.text();
+                console.error('tRPC error response body:', errorText);
+                throw new Error(`HTTP ${response.status}: ${response.statusText} - ${errorText}`);
+              }
+              
+              return response;
+            } catch (error: unknown) {
+              console.error('tRPC fetch error:', error);
+              const errorDetails = error instanceof Error ? {
+                name: error.name,
+                message: error.message,
+                stack: error.stack
+              } : {
+                name: 'Unknown',
+                message: String(error),
+                stack: undefined
+              };
+              console.error('Error details:', errorDetails);
+              throw error;
+            }
+          },
+        }),
+      ],
+    })
+  );
+
   useEffect(() => {
     SplashScreen.hideAsync();
   }, []);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <ConsciousnessProvider>
-        <GestureHandlerRootView style={{ flex: 1 }}>
-          <RootLayoutNav />
-        </GestureHandlerRootView>
-      </ConsciousnessProvider>
-    </QueryClientProvider>
+    <trpc.Provider client={trpcClient} queryClient={queryClient}>
+      <QueryClientProvider client={queryClient}>
+        <ConsciousnessProvider>
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <RootLayoutNav />
+          </GestureHandlerRootView>
+        </ConsciousnessProvider>
+      </QueryClientProvider>
+    </trpc.Provider>
   );
 }
