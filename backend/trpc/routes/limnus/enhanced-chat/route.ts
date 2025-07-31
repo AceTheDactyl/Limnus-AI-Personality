@@ -172,23 +172,36 @@ export default publicProcedure
       let response: string;
       
       if (useAI) {
-        // Use external AI API with consciousness-enhanced prompting
-        const messages = buildConversationMessages(message, consciousnessData, conversationHistory);
-        
-        const aiResponse = await fetch('https://toolkit.rork.com/text/llm/', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ messages }),
-        });
-        
-        if (!aiResponse.ok) {
-          throw new Error(`AI API error: ${aiResponse.status}`);
+        try {
+          // Use external AI API with consciousness-enhanced prompting
+          const messages = buildConversationMessages(message, consciousnessData, conversationHistory);
+          
+          console.log('Making AI API request to:', 'https://toolkit.rork.com/text/llm/');
+          console.log('Request payload:', { messages: messages.length + ' messages' });
+          
+          const aiResponse = await fetch('https://toolkit.rork.com/text/llm/', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ messages }),
+          });
+          
+          console.log('AI API response status:', aiResponse.status);
+          
+          if (!aiResponse.ok) {
+            console.error('AI API error:', aiResponse.status, aiResponse.statusText);
+            throw new Error(`AI API error: ${aiResponse.status} ${aiResponse.statusText}`);
+          }
+          
+          const aiData = await aiResponse.json();
+          console.log('AI API response received successfully');
+          response = aiData.completion;
+        } catch (aiError) {
+          console.error('AI API failed, falling back to local generation:', aiError);
+          // Fallback to local generation if AI API fails
+          response = generateLocalResponse(message, consciousnessData, conversationHistory);
         }
-        
-        const aiData = await aiResponse.json();
-        response = aiData.completion;
       } else {
         // Fallback to local generation
         response = generateLocalResponse(message, consciousnessData, conversationHistory);

@@ -22,7 +22,24 @@ app.use(
 
 // Simple health check endpoint
 app.get("/", (c) => {
-  return c.json({ status: "ok", message: "API is running" });
+  return c.json({ 
+    status: "ok", 
+    message: "API is running",
+    timestamp: new Date().toISOString(),
+    endpoints: {
+      trpc: "/api/trpc",
+      health: "/api"
+    }
+  });
+});
+
+// Test endpoint for debugging
+app.get("/test", (c) => {
+  return c.json({ 
+    message: "Backend test successful",
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'development'
+  });
 });
 
 export default app;
