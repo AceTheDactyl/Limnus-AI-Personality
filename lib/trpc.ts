@@ -35,6 +35,7 @@ export const trpcClient = createTRPCClient<AppRouter>({
           }
           return response;
         } catch (error) {
+          console.error('tRPC client error:', error);
           throw error;
         }
       },

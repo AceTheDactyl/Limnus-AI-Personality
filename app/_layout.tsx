@@ -44,11 +44,6 @@ export default function RootLayout() {
         refetchOnReconnect: false,
       },
     },
-    logger: {
-      log: () => {},
-      warn: () => {},
-      error: () => {},
-    },
   }));
 
   const [trpcClient] = useState(() =>
@@ -65,6 +60,7 @@ export default function RootLayout() {
               }
               return response;
             } catch (error) {
+              console.error('tRPC fetch error:', error);
               throw error;
             }
           },
