@@ -37,10 +37,17 @@ export default function RootLayout() {
   const [queryClient] = useState(() => new QueryClient({
     defaultOptions: {
       queries: {
-        retry: false, // Disable retries to stop repeated attempts
-        staleTime: 5 * 60 * 1000, // 5 minutes
-        enabled: false, // Disable all queries by default
+        retry: false,
+        staleTime: 5 * 60 * 1000,
+        refetchOnWindowFocus: false,
+        refetchOnMount: false,
+        refetchOnReconnect: false,
       },
+    },
+    logger: {
+      log: () => {},
+      warn: () => {},
+      error: () => {},
     },
   }));
 
@@ -54,12 +61,10 @@ export default function RootLayout() {
             try {
               const response = await fetch(url, options);
               if (!response.ok) {
-                console.warn(`tRPC request failed: ${response.status} ${response.statusText}`);
                 throw new Error(`HTTP ${response.status}: ${response.statusText}`);
               }
               return response;
             } catch (error) {
-              console.warn('tRPC fetch error:', error);
               throw error;
             }
           },
