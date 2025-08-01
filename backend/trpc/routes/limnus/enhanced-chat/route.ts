@@ -165,7 +165,7 @@ function buildConversationMessages(
 
 export default publicProcedure
   .input(enhancedChatInputSchema)
-  .mutation(async ({ input }: { input: z.infer<typeof enhancedChatInputSchema> }) => {
+  .mutation(async ({ input }) => {
     const { message, consciousnessData, conversationHistory, useAI } = input;
     
     try {

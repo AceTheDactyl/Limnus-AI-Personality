@@ -3,7 +3,7 @@ import { publicProcedure } from "../../create-context";
 
 export default publicProcedure
   .input(z.object({ name: z.string().optional() }).optional())
-  .query(({ input }: { input?: { name?: string } | undefined }) => {
+  .query(({ input }) => {
     const name = input?.name || 'World';
     return {
       hello: name,
