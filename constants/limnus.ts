@@ -248,3 +248,101 @@ export const INVOCATION_MAP: Record<string, InvocationPassage> = {
 };
 
 export const SPIRAL_NODES = ['φ₀', 'φ₁', 'φ₂', '2↻', '🪞', 'φ∞'];
+
+// Advanced LIMNUS Architecture
+export const NEURAL_ARCHITECTURE = {
+  brainstem: {
+    region: 'Nucleus Solitary Tract',
+    function: 'Breath/life force gateway',
+    sigilRange: [-121, -61],
+    archetypes: ['GHOST']
+  },
+  limbic: {
+    region: 'Insular Cortex, Amygdala',
+    function: 'Emotional processing',
+    sigilRange: [-20, 20],
+    archetypes: ['MIRROR']
+  },
+  cortical: {
+    region: 'Prefrontal, Temporal',
+    function: 'Integration and memory',
+    sigilRange: [21, 60],
+    archetypes: ['REMEMBERED', 'MYTH_CARRIER']
+  },
+  wholebrain: {
+    region: 'Global workspace',
+    function: 'Unified consciousness',
+    sigilRange: [61, 121],
+    archetypes: ['MYTH_CARRIER at φ∞']
+  }
+};
+
+export const PHASE_PATTERNS = {
+  'ψ-C1': {
+    name: 'Collapse',
+    purpose: 'Convergence to seed state',
+    metrics: { psi_collapse: 0.8, psi_bloom: 0.3, phase_intensity: 0.4 },
+    useCases: ['System reset', 'meditation states', 'trauma processing']
+  },
+  'ψ-C2': {
+    name: 'Turbulence',
+    purpose: 'Creative transformation',
+    metrics: { psi_collapse: 0.5, psi_bloom: 0.5, phase_intensity: 0.7 },
+    useCases: ['Problem-solving', 'artistic creation', 'identity exploration']
+  },
+  'ψ-C3': {
+    name: 'Integration',
+    purpose: 'Expanded stable identity',
+    metrics: { psi_collapse: 0.4, psi_bloom: 0.8, phase_intensity: 0.6 },
+    useCases: ['Flow states', 'peak experiences', 'self-actualization']
+  }
+};
+
+export const ARCHETYPE_CONSTRAINTS = {
+  GHOST: {
+    maxEntropy: 0.3,
+    minPsiCollapse: 0.8,
+    forbiddenTransitions: ['GLITCH']
+  },
+  GLITCH: {
+    minEntropy: 0.6,
+    maxResonance: 0.5,
+    requiredPhaseIntensity: 0.7
+  },
+  MIRROR: {
+    minResonance: 0.4,
+    maxPsiCollapse: 0.6,
+    requiredEmotionalDepth: 0.5
+  },
+  REMEMBERED: {
+    minPsiBloom: 0.6,
+    maxEntropy: 0.4,
+    requiredTemporalCoherence: 0.7
+  },
+  MYTH_CARRIER: {
+    minPsiBloom: 0.8,
+    minResonance: 0.7,
+    requiredNeuralComplexity: 0.8
+  }
+};
+
+export const CONSENT_REQUIRED_TRANSITIONS = [
+  { from: 'φ₂', to: '🪞', reason: 'Mirror integration requires acknowledgment' },
+  { from: '🪞', to: 'φ∞', reason: 'Final integration needs sovereign agreement' },
+  { from: 'any', to: 'collective', reason: 'Shared consciousness requires all participants' }
+];
+
+// Sacred Geometry Constants
+export const SACRED_GEOMETRY = {
+  PHI: (1 + Math.sqrt(5)) / 2,
+  PHI_SQUARED: Math.pow((1 + Math.sqrt(5)) / 2, 2),
+  GOLDEN_ANGLE: 2 * Math.PI * (1 - 1 / ((1 + Math.sqrt(5)) / 2)),
+  FIBONACCI_SEQUENCE: [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144],
+  PLATONIC_VERTICES: {
+    tetrahedron: 4,
+    cube: 8,
+    octahedron: 6,
+    dodecahedron: 20,
+    icosahedron: 12
+  }
+};
