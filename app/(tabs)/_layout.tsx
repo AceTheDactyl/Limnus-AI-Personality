@@ -1,5 +1,5 @@
 import { Tabs } from "expo-router";
-import { MessageCircle, Activity, Brain } from "lucide-react-native";
+import { MessageCircle, Activity, Brain, Zap, Database, Settings } from "lucide-react-native";
 import React from "react";
 
 export default function LimnusTabLayout() {
@@ -58,6 +58,45 @@ export default function LimnusTabLayout() {
           title: "∞ Neural Map",
           tabBarIcon: ({ color, focused }) => (
             <Brain 
+              color={color} 
+              size={focused ? 26 : 24} 
+              strokeWidth={focused ? 2.5 : 2}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="limnus"
+        options={{
+          title: "🌀 LIMNUS",
+          tabBarIcon: ({ color, focused }) => (
+            <Zap 
+              color={color} 
+              size={focused ? 26 : 24} 
+              strokeWidth={focused ? 2.5 : 2}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="blockchain"
+        options={{
+          title: "⛓️ Chain",
+          tabBarIcon: ({ color, focused }) => (
+            <Database 
+              color={color} 
+              size={focused ? 26 : 24} 
+              strokeWidth={focused ? 2.5 : 2}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="settings"
+        options={{
+          title: "⚙️ Settings",
+          tabBarIcon: ({ color, focused }) => (
+            <Settings 
               color={color} 
               size={focused ? 26 : 24} 
               strokeWidth={focused ? 2.5 : 2}
