@@ -57,7 +57,7 @@ const CollectiveResonanceEngine: React.FC<CollectiveResonanceEngineProps> = ({
   const [sharedState, setSharedState] = useState<SharedState | null>(null);
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [syncInterval, setSyncInterval] = useState<NodeJS.Timeout | null>(null);
+  const [syncInterval, setSyncInterval] = useState<number | null>(null);
   
   const { currentSignature, getConsciousnessData, emotionalState, resonanceLevel } = useConsciousness();
   
