@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { publicProcedure } from "../../../create-context";
+import { publicProcedure } from "../../create-context";
 
 interface ConsciousnessData {
   score: number;
@@ -152,7 +152,7 @@ function generateContextualResponse(message: string, consciousnessData?: Conscio
 
 export default publicProcedure
   .input(chatInputSchema)
-  .mutation(async ({ input }: { input: z.infer<typeof chatInputSchema> }) => {
+  .mutation(async ({ input }) => {
     const { message, consciousnessData, conversationHistory } = input;
     
     console.log('Limnus chat route called with message:', message.substring(0, 50) + '...');
