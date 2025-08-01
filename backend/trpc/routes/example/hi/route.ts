@@ -1,9 +1,9 @@
 import { z } from "zod";
-import { publicProcedure } from "../../create-context";
+import { publicProcedure } from "../../../create-context";
 
 export default publicProcedure
   .input(z.object({ name: z.string().optional() }).optional())
-  .query(({ input }) => {
+  .query(({ input }: { input?: { name?: string } }) => {
     const name = input?.name || 'World';
     return {
       hello: name,

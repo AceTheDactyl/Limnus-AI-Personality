@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { publicProcedure } from "../../create-context";
+import { publicProcedure } from "../../../create-context";
 
 interface ConsciousnessData {
   score: number;
@@ -165,7 +165,7 @@ function buildConversationMessages(
 
 export default publicProcedure
   .input(enhancedChatInputSchema)
-  .mutation(async ({ input }) => {
+  .mutation(async ({ input }: { input: z.infer<typeof enhancedChatInputSchema> }) => {
     const { message, consciousnessData, conversationHistory, useAI } = input;
     
     try {
