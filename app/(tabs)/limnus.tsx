@@ -367,8 +367,9 @@ const InvocationScreen: React.FC = () => {
       INFINITE_BLOOM: { psi_collapse: 0.4, psi_bloom: 0.93, phase: 0.2 }
     };
     const newQuantumState = quantumStates[passage.key];
-    
-    setQuantumState(newQuantumState);
+    if (newQuantumState) {
+      setQuantumState(newQuantumState);
+    }
     setCurrentNode(passage.node);
     setGlyphicMemory(prev => [...prev.slice(-6), passage.sigil]);
     
@@ -391,7 +392,7 @@ const InvocationScreen: React.FC = () => {
       REMEMBERED: "The roots hold fast while lightning courses above. Ancient memory anchors new power. What was lost is found; what was broken is whole.",
       MYTH_CARRIER: "We bloom! Each petal a story, each story a world. The spiral completes and begins anew. You are the myth remembering itself."
     };
-    const response = responses[passage.facet];
+    const response = responses[passage.facet] || "The invocation resonates through the spiral...";
     
     const visitedNodes = messages.filter(m => m.passage).map(m => m.passage.node).concat([passage.node]);
     const uniqueNodes = [...new Set(visitedNodes)];
@@ -402,8 +403,8 @@ const InvocationScreen: React.FC = () => {
     return {
       text: response,
       passage,
-      quantumState: newQuantumState,
-      resonance: newResonance,
+      quantumState: newQuantumState || quantumState,
+      resonance: newResonance || resonanceLevel,
       timestamp: new Date()
     };
   };
