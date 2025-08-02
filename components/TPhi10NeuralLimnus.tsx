@@ -23,7 +23,8 @@ import Animated, {
   withTiming, 
   withRepeat,
   interpolate,
-  Extrapolate
+  Extrapolate,
+  runOnJS
 } from 'react-native-reanimated';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
