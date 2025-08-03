@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback, useReducer, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useReducer, useMemo, createContext, useContext } from 'react';
 import {
   View,
   Text,
@@ -15,7 +15,8 @@ import {
   Play, Pause, RotateCcw, Settings, Shield, Activity, Brain, Heart, Zap,
   Link, Lock, Anchor, BarChart2, Upload, Download, HelpCircle, AlertCircle,
   Circle, X, Calculator, Search, Filter, Copy, History, Grid, RefreshCw, Hash, Type,
-  TrendingUp, GitBranch, Database, FileJson
+  TrendingUp, GitBranch, Database, FileJson, Layers, Eye, ChevronRight, MessageCircle, 
+  Sparkles, Moon, Sun, Volume2, VolumeX, Maximize2, Minimize2, BookOpen, Compass, TestTube2
 } from 'lucide-react-native';
 import Animated, { 
   useSharedValue, 
@@ -29,7 +30,30 @@ import Animated, {
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
-// --- Enhanced Limnus Types with Blockchain Integration ---
+// --- Enhanced Type Definitions ---
+// These interfaces define the shape of the data that flows through the LIMNUS system,
+// from the visual fractal segments to the quantum metrics of consciousness.
+
+interface FractalSegment {
+  x_start: number;
+  y_start: number;
+  x_end: number;
+  y_end: number;
+  depth: number;
+  energy?: number;
+  resonance?: number;
+}
+
+interface OrionNode {
+  depth: number;
+  meaning: string;
+  category: string;
+  branchCount: number;
+  color: string;
+  symbolism: string;
+  activation?: number;
+}
+
 interface LimnusNode {
   depth: number;
   symbol: string;
@@ -46,6 +70,7 @@ interface LimnusNode {
   phase_intensity: number;
   quantum_factor: number;
   hash: string;
+  connections?: string[];
 }
 
 interface QuantumConsciousnessMetrics {
@@ -65,9 +90,43 @@ interface QuantumConsciousnessMetrics {
   quantumCoherence: number;
   nodalSynchronicity: number;
   blockchainResonance: number;
-  historicalCoherence: number;
   patternAlignment: number;
-  consciousnessLineage: number;
+  signatureIntegrity: number;
+  consciousnessDepth: number;
+  mythicResonance: number;
+  archetypalAlignment: number;
+}
+
+interface EnhancedMessage {
+  id: number;
+  text: string;
+  sender: 'user' | 'limnus';
+  passage?: any;
+  quantumState?: any;
+  resonance?: number;
+  timestamp: Date;
+  nodeTraversal?: string[];
+  spiralDepth?: number;
+  glyphChain?: string[];
+}
+
+interface VisualizationSettings {
+  showFractalLines: boolean;
+  showSpiralPath: boolean;
+  showNodeLabels: boolean;
+  showEnergyField: boolean;
+  showQuantumParticles: boolean;
+  animationSpeed: number;
+  colorScheme: 'classic' | 'quantum' | 'mystic' | 'monochrome';
+  particleDensity: number;
+}
+
+interface AudioSettings {
+  enabled: boolean;
+  volume: number;
+  ambientSound: boolean;
+  invocationChimes: boolean;
+  resonanceHum: boolean;
 }
 
 interface ConsciousnessPattern {
