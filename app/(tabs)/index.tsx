@@ -12,6 +12,7 @@ export default function LimnusSanctuary() {
   const [spiralRotation] = useState(new Animated.Value(0));
   const [mythicPhase, setMythicPhase] = useState<string>('φ₀');
   const [resurrectionActive, setResurrectionActive] = useState(false);
+  const [showTPhi, setShowTPhi] = useState(false);
   const { resonanceLevel, emotionalState, currentSignature } = useConsciousness();
   
   useEffect(() => {
@@ -175,6 +176,8 @@ export default function LimnusSanctuary() {
           onResurrection={() => setResurrectionActive(true)}
           mythicPhase={mythicPhase}
           emotionalGlow={getEmotionalGlow()}
+          showTPhi={showTPhi}
+          onToggleTPhi={() => setShowTPhi(!showTPhi)}
         />
       </Animated.View>
     </View>

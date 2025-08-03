@@ -11,9 +11,10 @@ import {
   ActivityIndicator,
   Alert
 } from 'react-native';
-import { Send, Brain, Zap, Heart, Eye, Sparkles, TestTube } from 'lucide-react-native';
+import { Send, Brain, Zap, Heart, Eye, Sparkles, TestTube, Calculator } from 'lucide-react-native';
 import { trpc } from '@/lib/trpc';
 import { useConsciousness } from '@/contexts/ConsciousnessContext';
+import TPhi10NeuralLimnusSystem from './TPhi10NeuralLimnusSystem';
 
 interface Message {
   id: string;
@@ -35,13 +36,17 @@ interface LimnusChatProps {
   onResurrection?: () => void;
   mythicPhase?: string;
   emotionalGlow?: string;
+  showTPhi?: boolean;
+  onToggleTPhi?: () => void;
 }
 
 const LimnusChat: React.FC<LimnusChatProps> = ({ 
   useEnhancedAI = true, 
   onResurrection,
   mythicPhase = 'φ₀',
-  emotionalGlow = '#bd93f9'
+  emotionalGlow = '#bd93f9',
+  showTPhi = false,
+  onToggleTPhi
 }) => {
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -245,6 +250,25 @@ const LimnusChat: React.FC<LimnusChatProps> = ({
     });
   };
   
+  // If T-Phi mode is active, show the T-Phi system
+  if (showTPhi) {
+    return (
+      <View style={styles.container}>
+        <View style={styles.statusBar}>
+          <TouchableOpacity 
+            style={styles.tphiToggleButton}
+            onPress={onToggleTPhi}
+          >
+            <Brain size={16} color="#8B5CF6" />
+            <Text style={styles.tphiToggleText}>Back to Chat</Text>
+          </TouchableOpacity>
+          <Text style={styles.tphiTitle}>T-Phi10 Neural Limnus System</Text>
+        </View>
+        <TPhi10NeuralLimnusSystem />
+      </View>
+    );
+  }
+  
   return (
     <KeyboardAvoidingView 
       style={styles.container} 
@@ -263,6 +287,16 @@ const LimnusChat: React.FC<LimnusChatProps> = ({
           <TestTube size={14} color="#8B5CF6" />
           <Text style={styles.testButtonText}>Debug</Text>
         </TouchableOpacity>
+        
+        {onToggleTPhi && (
+          <TouchableOpacity 
+            style={styles.tphiButton}
+            onPress={onToggleTPhi}
+          >
+            <Calculator size={14} color="#F59E0B" />
+            <Text style={styles.tphiButtonText}>T-Phi</Text>
+          </TouchableOpacity>
+        )}
         <View style={styles.statusItem}>
           <Brain size={16} color={getConsciousnessStatusColor()} />
           <Text style={[styles.statusText, { color: getConsciousnessStatusColor() }]}>
@@ -519,6 +553,45 @@ const styles = StyleSheet.create({
     fontSize: 10,
     color: '#8B5CF6',
     fontWeight: '500',
+  },
+  tphiButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    backgroundColor: 'rgba(245, 158, 11, 0.1)',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#F59E0B',
+  },
+  tphiButtonText: {
+    fontSize: 10,
+    color: '#F59E0B',
+    fontWeight: '500',
+  },
+  tphiToggleButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    backgroundColor: 'rgba(139, 92, 246, 0.2)',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#8B5CF6',
+  },
+  tphiToggleText: {
+    fontSize: 12,
+    color: '#8B5CF6',
+    fontWeight: '600',
+  },
+  tphiTitle: {
+    fontSize: 14,
+    color: '#F59E0B',
+    fontWeight: '600',
+    flex: 1,
+    textAlign: 'center',
   },
 });
 
