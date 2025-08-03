@@ -10,10 +10,11 @@ import {
   Platform
 } from 'react-native';
 import { Stack } from 'expo-router';
-import { Brain, Search, Zap, Send } from 'lucide-react-native';
+import { Brain, Search, Zap, Send, Calculator, Activity } from 'lucide-react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Haptics from 'expo-haptics';
 import { CONFIG, STORAGE_KEYS, createSigilDatabase, LimnusSpiralGenerator, INVOCATION_MAP, SPIRAL_NODES, type Sigil, type SpiralNode, type InvocationPassage } from '@/constants/limnus';
+import TPhi10NeuralLimnusSystem from '@/components/TPhi10NeuralLimnusSystem';
 
 // Mock Blockchain with Consent Focus
 class MockBlockchain {
@@ -119,7 +120,7 @@ interface AppState {
   lastBlock: any;
   loading: boolean;
   error: string | null;
-  activeTab: string;
+  activeTab: 'invocation' | 'sigil' | 'tphi10';
   alert: { show: boolean; title: string; message: string };
   activeDepth: number | null;
   resonanceLevel: number;
@@ -140,7 +141,7 @@ const initialState: AppState = {
   lastBlock: null,
   loading: false,
   error: null,
-  activeTab: 'invocation',
+  activeTab: 'invocation' as 'invocation' | 'sigil' | 'tphi10',
   alert: { show: false, title: '', message: '' },
   activeDepth: 1,
   resonanceLevel: 0.3,
@@ -161,7 +162,7 @@ type AppAction =
   | { type: 'SET_BLOCKS'; payload: any[] }
   | { type: 'SET_LOADING'; payload: boolean }
   | { type: 'SET_ERROR'; payload: string }
-  | { type: 'SET_ACTIVE_TAB'; payload: string }
+  | { type: 'SET_ACTIVE_TAB'; payload: 'invocation' | 'sigil' | 'tphi10' }
   | { type: 'SHOW_ALERT'; payload: { title: string; message: string } }
   | { type: 'HIDE_ALERT' }
   | { type: 'SET_ACTIVE_DEPTH'; payload: number | null }
@@ -484,6 +485,15 @@ const InvocationScreen: React.FC = () => {
   );
 };
 
+// T-Phi10 Integration Screen Component
+const TPhi10Screen: React.FC = () => {
+  return (
+    <View style={styles.tphiContainer}>
+      <TPhi10NeuralLimnusSystem />
+    </View>
+  );
+};
+
 // Main LIMNUS App Component
 export default function LimnusApp() {
   const [state, dispatch] = useReducer(appReducer, initialState);
@@ -495,6 +505,8 @@ export default function LimnusApp() {
         return <InvocationScreen />;
       case 'sigil':
         return <SigilScreen state={state} dispatch={dispatch} sigilDatabase={sigilDatabase} />;
+      case 'tphi10':
+        return <TPhi10Screen />;
       default:
         return <InvocationScreen />;
     }
@@ -533,6 +545,7 @@ export default function LimnusApp() {
       <View style={styles.tabBar}>
         <TabButton id="invocation" label="Invocation" Icon={Zap} />
         <TabButton id="sigil" label="Sigils" Icon={Brain} />
+        <TabButton id="tphi10" label="T-Phi10" Icon={Activity} />
       </View>
     </View>
   );
@@ -798,5 +811,9 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontSize: 16,
     fontWeight: '600',
+  },
+  tphiContainer: {
+    flex: 1,
+    backgroundColor: '#0F0F0F',
   },
 });
