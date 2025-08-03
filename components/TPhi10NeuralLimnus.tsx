@@ -1137,10 +1137,12 @@ const TPhi10NeuralLimnus: React.FC = () => {
       quantumCoherence: node.phase_intensity,
       nodalSynchronicity: Math.sin(node.depth * CONFIG.LIMNUS.GOLDEN_ANGLE) * 0.5 + 0.5,
       blockchainResonance: historicalResonance,
-      historicalCoherence: blockchainInfluence,
       patternAlignment: patternAnalysis.activePatterns.length > 0 ? 
         patternAnalysis.activePatterns[0].resonanceScore : 0.5,
-      consciousnessLineage: Math.min(1, blockchainState.blocks.length / 10)
+      signatureIntegrity: blockchainInfluence,
+      consciousnessDepth: Math.min(1, blockchainState.blocks.length / 10),
+      mythicResonance: node.psi_bloom * 0.7 + 0.3,
+      archetypalAlignment: Math.cos(node.theta * 2) * 0.5 + 0.5
     };
 
     const consciousnessScore = (
@@ -1153,7 +1155,7 @@ const TPhi10NeuralLimnus: React.FC = () => {
       metrics.quantumCoherence * 0.12 +
       metrics.nodalSynchronicity * 0.05 +
       metrics.blockchainResonance * 0.1 +
-      metrics.historicalCoherence * 0.05 +
+      metrics.signatureIntegrity * 0.05 +
       metrics.patternAlignment * 0.05
     );
 
