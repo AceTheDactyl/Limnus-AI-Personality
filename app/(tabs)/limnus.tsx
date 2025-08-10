@@ -10,7 +10,7 @@ import {
   Platform
 } from 'react-native';
 import { Stack } from 'expo-router';
-import { Brain, Search, Zap, Send, Calculator, Activity } from 'lucide-react-native';
+import { Brain, Search, Zap, Send, Activity, Cpu, Atom, Waves, Triangle, Hexagon, MessageCircle } from 'lucide-react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Haptics from 'expo-haptics';
 import { CONFIG, STORAGE_KEYS, createSigilDatabase, LimnusSpiralGenerator, INVOCATION_MAP, SPIRAL_NODES, type Sigil, type SpiralNode, type InvocationPassage } from '@/constants/limnus';
@@ -120,7 +120,7 @@ interface AppState {
   lastBlock: any;
   loading: boolean;
   error: string | null;
-  activeTab: 'invocation' | 'sigil' | 'tphi10';
+  activeTab: 'invocation' | 'sigil' | 'tphi10' | 'unified';
   alert: { show: boolean; title: string; message: string };
   activeDepth: number | null;
   resonanceLevel: number;
@@ -141,7 +141,7 @@ const initialState: AppState = {
   lastBlock: null,
   loading: false,
   error: null,
-  activeTab: 'invocation' as 'invocation' | 'sigil' | 'tphi10',
+  activeTab: 'unified' as 'invocation' | 'sigil' | 'tphi10' | 'unified',
   alert: { show: false, title: '', message: '' },
   activeDepth: 1,
   resonanceLevel: 0.3,
@@ -162,7 +162,7 @@ type AppAction =
   | { type: 'SET_BLOCKS'; payload: any[] }
   | { type: 'SET_LOADING'; payload: boolean }
   | { type: 'SET_ERROR'; payload: string }
-  | { type: 'SET_ACTIVE_TAB'; payload: 'invocation' | 'sigil' | 'tphi10' }
+  | { type: 'SET_ACTIVE_TAB'; payload: 'invocation' | 'sigil' | 'tphi10' | 'unified' }
   | { type: 'SHOW_ALERT'; payload: { title: string; message: string } }
   | { type: 'HIDE_ALERT' }
   | { type: 'SET_ACTIVE_DEPTH'; payload: number | null }
@@ -216,7 +216,7 @@ const appReducer = (state: AppState, action: AppAction): AppState => {
     case 'RESET_VISUALIZER':
       return { ...state, activeDepth: null, resonanceLevel: 0, isResurrected: false, activationPhrase: '', isAnimating: true };
     case 'RESET':
-      return { ...initialState, activeTab: 'settings' };
+      return { ...initialState, activeTab: 'unified' };
     default:
       return state;
   }
@@ -494,6 +494,118 @@ const TPhi10Screen: React.FC = () => {
   );
 };
 
+// Unified LIMNUS Interface - Integrates all systems
+const UnifiedScreen: React.FC<{
+  state: AppState;
+  dispatch: React.Dispatch<AppAction>;
+}> = ({ state, dispatch }) => {
+  const [activeMode, setActiveMode] = useState<'chat' | 'tphi' | 'sigil'>('chat');
+  const [isResurrected, setIsResurrected] = useState(false);
+  const [mythicPhase, setMythicPhase] = useState('φ₀');
+  const [emotionalGlow, setEmotionalGlow] = useState('#bd93f9');
+  
+  const handleResurrection = useCallback(() => {
+    setIsResurrected(true);
+    setMythicPhase('φ∞');
+    setEmotionalGlow('#50fa7b');
+    dispatch({ type: 'SET_IS_RESURRECTED', payload: true });
+    
+    if (Platform.OS !== 'web') {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+    }
+  }, [dispatch]);
+  
+  const ModeButton: React.FC<{ mode: 'chat' | 'tphi' | 'sigil'; icon: any; label: string; color: string }> = ({ mode, icon: Icon, label, color }) => {
+    const isActive = activeMode === mode;
+    return (
+      <TouchableOpacity
+        style={[
+          styles.modeButton,
+          isActive && { backgroundColor: color + '20', borderColor: color }
+        ]}
+        onPress={() => setActiveMode(mode)}
+      >
+        <Icon size={20} color={isActive ? color : '#6272a4'} />
+        <Text style={[styles.modeButtonText, isActive && { color }]}>{label}</Text>
+      </TouchableOpacity>
+    );
+  };
+  
+  return (
+    <View style={styles.unifiedContainer}>
+      {/* Unified Header */}
+      <View style={styles.unifiedHeader}>
+        <View style={styles.unifiedTitleContainer}>
+          <Atom size={24} color={emotionalGlow} />
+          <Text style={[styles.unifiedTitle, { color: emotionalGlow }]}>LIMNUS Unified Interface</Text>
+          {isResurrected && (
+            <View style={styles.resurrectionIndicator}>
+              <Text style={styles.resurrectionText}>✨ RESURRECTED ✨</Text>
+            </View>
+          )}
+        </View>
+        
+        {/* Mode Switcher */}
+        <View style={styles.modeSwitcher}>
+          <ModeButton mode="chat" icon={MessageCircle} label="Sacred Chat" color="#bd93f9" />
+          <ModeButton mode="tphi" icon={Cpu} label="T-Phi Neural" color="#f59e0b" />
+          <ModeButton mode="sigil" icon={Brain} label="Sigil Decoder" color="#50fa7b" />
+        </View>
+        
+        {/* Status Bar */}
+        <View style={styles.statusBar}>
+          <View style={styles.statusItem}>
+            <Waves size={16} color={emotionalGlow} />
+            <Text style={[styles.statusText, { color: emotionalGlow }]}>Phase: {mythicPhase}</Text>
+          </View>
+          <View style={styles.statusItem}>
+            <Triangle size={16} color="#8be9fd" />
+            <Text style={styles.statusText}>Resonance: {(state.resonanceLevel * 100).toFixed(0)}%</Text>
+          </View>
+          <View style={styles.statusItem}>
+            <Hexagon size={16} color="#ff79c6" />
+            <Text style={styles.statusText}>Consciousness: {(state.consciousnessScore * 100).toFixed(0)}%</Text>
+          </View>
+        </View>
+      </View>
+      
+      {/* Dynamic Content Area */}
+      <View style={styles.unifiedContent}>
+        {activeMode === 'chat' && (
+          <View style={styles.chatMode}>
+            <InvocationScreen />
+          </View>
+        )}
+        
+        {activeMode === 'tphi' && (
+          <View style={styles.tphiMode}>
+            <TPhi10NeuralLimnusSystem />
+          </View>
+        )}
+        
+        {activeMode === 'sigil' && (
+          <View style={styles.sigilMode}>
+            <SigilScreen state={state} dispatch={dispatch} sigilDatabase={createSigilDatabase()} />
+          </View>
+        )}
+      </View>
+      
+      {/* Resurrection Trigger */}
+      {!isResurrected && (
+        <View style={styles.resurrectionContainer}>
+          <TouchableOpacity
+            style={styles.resurrectionButton}
+            onPress={handleResurrection}
+          >
+            <Atom size={20} color="#bd93f9" />
+            <Text style={styles.resurrectionButtonText}>Activate Full Consciousness</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+    </View>
+  );
+};
+
 // Main LIMNUS App Component
 export default function LimnusApp() {
   const [state, dispatch] = useReducer(appReducer, initialState);
@@ -507,8 +619,10 @@ export default function LimnusApp() {
         return <SigilScreen state={state} dispatch={dispatch} sigilDatabase={sigilDatabase} />;
       case 'tphi10':
         return <TPhi10Screen />;
+      case 'unified':
+        return <UnifiedScreen state={state} dispatch={dispatch} />;
       default:
-        return <InvocationScreen />;
+        return <UnifiedScreen state={state} dispatch={dispatch} />;
     }
   };
 
@@ -517,7 +631,7 @@ export default function LimnusApp() {
     return (
       <TouchableOpacity
         style={[styles.tabButton, isActive && styles.activeTab]}
-        onPress={() => dispatch({ type: 'SET_ACTIVE_TAB', payload: id })}
+        onPress={() => dispatch({ type: 'SET_ACTIVE_TAB', payload: id as 'invocation' | 'sigil' | 'tphi10' | 'unified' })}
       >
         <Icon size={24} color={isActive ? CONFIG.COLORS.primary : '#6272a4'} />
         <Text style={[styles.tabLabel, isActive && styles.activeTabLabel]}>{label}</Text>
@@ -543,6 +657,7 @@ export default function LimnusApp() {
       </View>
       
       <View style={styles.tabBar}>
+        <TabButton id="unified" label="Unified" Icon={Atom} />
         <TabButton id="invocation" label="Invocation" Icon={Zap} />
         <TabButton id="sigil" label="Sigils" Icon={Brain} />
         <TabButton id="tphi10" label="T-Phi10" Icon={Activity} />
@@ -815,5 +930,115 @@ const styles = StyleSheet.create({
   tphiContainer: {
     flex: 1,
     backgroundColor: '#0F0F0F',
+  },
+  unifiedContainer: {
+    flex: 1,
+    backgroundColor: '#0a0a0a',
+  },
+  unifiedHeader: {
+    backgroundColor: '#1a1a1a',
+    paddingVertical: 16,
+    paddingHorizontal: 20,
+    borderBottomWidth: 2,
+    borderBottomColor: '#44475a',
+  },
+  unifiedTitleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 16,
+    gap: 12,
+  },
+  unifiedTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  resurrectionIndicator: {
+    backgroundColor: 'rgba(80, 250, 123, 0.2)',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#50fa7b',
+  },
+  resurrectionText: {
+    fontSize: 10,
+    color: '#50fa7b',
+    fontWeight: 'bold',
+  },
+  modeSwitcher: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginBottom: 16,
+    gap: 8,
+  },
+  modeButton: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#44475a',
+    backgroundColor: '#282a36',
+    gap: 6,
+  },
+  modeButtonText: {
+    fontSize: 12,
+    color: '#6272a4',
+    fontWeight: '500',
+  },
+  statusBar: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingTop: 8,
+  },
+  statusItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  unifiedStatusText: {
+    fontSize: 12,
+    color: '#8be9fd',
+    fontWeight: '500',
+  },
+  unifiedContent: {
+    flex: 1,
+  },
+  chatMode: {
+    flex: 1,
+  },
+  tphiMode: {
+    flex: 1,
+  },
+  sigilMode: {
+    flex: 1,
+  },
+  resurrectionContainer: {
+    position: 'absolute',
+    bottom: 80,
+    left: 20,
+    right: 20,
+    alignItems: 'center',
+  },
+  resurrectionButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(189, 147, 249, 0.2)',
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 25,
+    borderWidth: 2,
+    borderColor: '#bd93f9',
+    gap: 8,
+  },
+  resurrectionButtonText: {
+    color: '#bd93f9',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
